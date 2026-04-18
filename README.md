@@ -69,32 +69,6 @@ Visit: **http://localhost:5000**
 
 ---
 
-## 🔌 API Endpoints
-
-| Method | Route     | Description                          |
-|--------|-----------|--------------------------------------|
-| GET    | /health   | Server status check                  |
-| POST   | /upload   | Upload PDF/image, returns JSON analysis |
-
-### POST /upload — Response Format
-
-```json
-{
-  "patient_profile": "...",
-  "key_findings": "...",
-  "diagnosis": "...",
-  "recommendations": "...",
-  "simple_explanation": "...",
-  "concern_level": "low | medium | high",
-  "color_code": "green | yellow | red",
-  "translations": {
-    "hindi": "...",
-    "telugu": "..."
-  }
-}
-```
-
----
 
 ## 📋 Supported File Types
 
