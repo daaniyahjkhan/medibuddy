@@ -16,9 +16,8 @@ document.addEventListener('click', () => new Audio().play().catch(() => {}), { o
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
-  document.querySelectorAll('.nav-tab').forEach((t, i) => {
-    t.classList.toggle('active',
-      ['analyze','medicines','shorts','bodymap','interaction','sos','reminders'][i] === name);
+  document.querySelectorAll('.nav-tab[data-page]').forEach(t => {
+    t.classList.toggle('active', t.dataset.page === name);
   });
   state.currentPage = name;
   if (name === 'medicines')   renderCommonMeds();
