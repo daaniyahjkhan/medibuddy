@@ -3,7 +3,7 @@
 // ══════════════════════════════════════════════════
 
 
-const GROQ_KEY_IX = 'GROQ_API_KEY';
+const GROQ_KEY_IX = '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';
 
 const ixState = { medicines: [] };
 

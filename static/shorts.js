@@ -5,7 +5,7 @@
 
 const SHORTS_CONFIG = {
   // 🔑 Paste your YouTube Data API v3 key here
-  API_KEY: 'YOUTUBE_API_KEY',
+  API_KEY: 'AIzaSyA1eWG6rILqgzJu9lRFLMnMrUmEmsqjkeU',
 
   // Strict medical search terms — rotated randomly each session
   QUERIES: [
@@ -58,10 +58,10 @@ async function initShorts() {
 
 // ── Fetch from YouTube Data API ───────────────────
 async function fetchMedicalShorts() {
-  if (SHORTS_CONFIG.API_KEY === 'YOUR_YOUTUBE_API_KEY') {
-    renderShortsError('no-key');
-    return;
-  }
+  // if (SHORTS_CONFIG.API_KEY ==='AIzaSyA1eWG6rILqgzJu9lRFLMnMrUmEmsqjkeU') {
+  //   renderShortsError('no-key');
+  //   return;
+  // }
 
   shortsState.loading = true;
   renderShortsLoading();
