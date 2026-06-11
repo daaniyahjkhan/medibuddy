@@ -3,7 +3,7 @@
 // ══════════════════════════════════════════════════
 
 
-const GROQ_KEY_IX = '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';
+const GROQ_KEY_IX = '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';
 
 const ixState = { medicines: [] };
 
