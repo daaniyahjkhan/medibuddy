@@ -1,3 +1,5 @@
+import os
+import google.generativeai as genai
 from dotenv import load_dotenv
 load_dotenv()
 import os
@@ -7,6 +9,11 @@ from flask_cors import CORS
 from utils.extractor import extract_text
 from utils.analyzer import analyze_with_gemini
 from utils.translator import translate_explanation
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
+    raise RuntimeError("Missing GEMINI_API_KEY in .env")
+
+genai.configure(api_key=GEMINI_API_KEY)
 
 # ── Logging ──────────────────────────────────────────────────────────────────
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -15,6 +22,7 @@ logger = logging.getLogger(__name__)
 # ── App ───────────────────────────────────────────────────────────────────────
 app = Flask(__name__)
 CORS(app)
+
 
 ALLOWED_EXTENSIONS = {"pdf", "jpg", "jpeg", "png"}
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB

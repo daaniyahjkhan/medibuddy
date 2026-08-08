@@ -1,9 +1,6 @@
 // ══════════════════════════════════════════════════
-//  MEDICINE INTERACTION CHECKER  —  Gemini 1.5 Flash
+//  MEDICINE INTERACTION CHECKER  —  Groq (Llama 3.1)
 // ══════════════════════════════════════════════════
-
-
-const GROQ_KEY_IX = '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';
 
 const ixState = { medicines: [] };
 
@@ -72,14 +69,13 @@ function ixRenderChips() {
   action.style.display = ixState.medicines.length >= 2 ? 'block' : 'none';
 }
 
-// ── Gemini call ───────────────────────────────────
+// ── Groq call ─────────────────────────────────────
 async function ixCheck() {
   if (ixState.medicines.length < 2) { showToast('⚠️ Add at least 2 medicines', true); return; }
 
   document.getElementById('ix-result').innerHTML = `
-    <div class="bm-loading"><div class="bm-spinner"></div><span>Checking interactions with Gemini…</span></div>`;
+    <div class="bm-loading"><div class="bm-spinner"></div><span>Checking interactions with AI…</span></div>`;
 
-  // Build all unique pairs
   const meds  = ixState.medicines;
   const pairs = [];
   for (let i = 0; i < meds.length; i++)
@@ -110,23 +106,16 @@ Respond ONLY with valid JSON, no markdown, no extra text:
 If a pair has no known interaction, do NOT include it in interactions array. Only include pairs with actual interactions.`;
 
   try {
-    const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const resp = await fetch('http://127.0.0.1:3000/api/check-interactions', {
       method:  'POST',
-      headers: {
-        'Content-Type':  'application/json',
-        'Authorization': `Bearer ${GROQ_KEY_IX}`,
-      },
-      body: JSON.stringify({
-        model:       'llama-3.1-8b-instant',
-        temperature: 0.3,
-        messages:    [{ role: 'user', content: prompt }],
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ prompt }),
     });
     const data = await resp.json();
 
-    if (data.error) {
+    if (!resp.ok || data.error) {
       document.getElementById('ix-result').innerHTML =
-        `<div class="bm-error">❌ Groq Error: ${data.error.message}<br><small>Check your API key in interaction.js</small></div>`;
+        `<div class="bm-error">❌ Error: ${data.error?.message || data.error || 'Request failed'}</div>`;
       return;
     }
 
@@ -152,7 +141,6 @@ function ixRenderResult(r) {
   document.getElementById('ix-result').innerHTML = `
     <div class="card ix-result-card">
 
-      <!-- Overall risk banner -->
       <div class="ix-banner" style="background:${bg};border-color:${c}30;">
         <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:${c};">
           ${riskIcon[r.overallRisk] || '✅'} ${r.overallRisk} Risk
@@ -160,12 +148,10 @@ function ixRenderResult(r) {
         <div style="font-size:13px;color:var(--text-muted);margin-top:6px;line-height:1.6;">${r.summary}</div>
       </div>
 
-      <!-- Medicines checked row -->
       <div class="ix-meds-row">
         ${ixState.medicines.map(m=>`<span class="ix-med-tag">💊 ${m}</span>`).join('')}
       </div>
 
-      <!-- Pair interactions -->
       ${r.interactions?.length ? `
         <div class="ix-sec">⚡ Interactions Found (${r.interactions.length} pair${r.interactions.length>1?'s':''})</div>
         ${r.interactions.map(ix => {
@@ -188,14 +174,12 @@ function ixRenderResult(r) {
           ✅ No significant interactions found between these medicines.
         </div>`}
 
-      <!-- Safe pairs -->
       ${r.safePairs?.length ? `
         <div class="ix-sec">✅ Safe Combinations</div>
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
           ${r.safePairs.map(p=>`<span style="padding:4px 12px;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);border-radius:20px;font-size:12px;color:var(--low);">${p}</span>`).join('')}
         </div>` : ''}
 
-      <!-- General tips -->
       ${r.generalTips?.length ? `
         <div class="ix-sec">💡 General Tips</div>
         ${r.generalTips.map((t,i)=>`

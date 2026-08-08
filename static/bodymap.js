@@ -2,7 +2,7 @@
 //  BODY MAP SYMPTOM CHECKER  —  Gemini 1.5 Flash
 // ══════════════════════════════════════════════════
 
-const GROQ_KEY_BM = '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';
+
 
 const bodyParts = {
   head:     { label: 'Head & Face',        cx:100, cy:36,  symptoms: ['Headache','Dizziness','Blurred vision','Memory issues','Ringing in ears','Facial pain'] },
@@ -165,7 +165,7 @@ async function bmAnalyze() {
   if (!sev)                      { showToast('⚠️ Select severity', true); return; }
 
   document.getElementById('bm-result').innerHTML = `
-    <div class="bm-loading"><div class="bm-spinner"></div><span>Analyzing with Gemini…</span></div>`;
+    <div class="bm-loading"><div class="bm-spinner"></div><span>Analyzing with AI…</span></div>`;
 
   const prompt = `You are MediBuddy, an AI medical assistant. A patient reports:
 Body area: ${bodyParts[bmState.selected].label}
@@ -186,23 +186,16 @@ Respond ONLY with valid JSON, no markdown, no extra text:
 }`;
 
   try {
-    const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const resp = await fetch('http://127.0.0.1:3000/api/body-map-analyze', {
       method:  'POST',
-      headers: {
-        'Content-Type':  'application/json',
-        'Authorization': `Bearer ${GROQ_KEY_BM}`,
-      },
-      body: JSON.stringify({
-        model:       'llama-3.1-8b-instant',
-        temperature: 0.3,
-        messages:    [{ role: 'user', content: prompt }],
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt }),
     });
     const data = await resp.json();
 
-    if (data.error) {
+    if (!resp.ok || data.error) {
       document.getElementById('bm-result').innerHTML =
-        `<div class="bm-error">❌ Groq Error: ${data.error.message}<br><small>Check your API key in bodymap.js</small></div>`;
+        `<div class="bm-error">❌ Error: ${data.error?.message || data.error || 'Request failed'}</div>`;
       return;
     }
 
