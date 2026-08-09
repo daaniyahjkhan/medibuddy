@@ -169,21 +169,6 @@ Open the local URL shown by the application in your browser.
 
 ---
 
-## 📚 What We Learned
-
-Building MediBuddy gave us hands-on experience with:
-
-- Building a complete web application
-- Integrating AI-powered functionality into a product
-- Working with multiple external services
-- Designing user-focused healthcare workflows
-- Connecting frontend and backend components
-- Team collaboration and division of responsibilities
-- Debugging and integrating different parts of a project
-- Building under time constraints
-
----
-
 ## ⚠️ Disclaimer
 
 MediBuddy is intended for **educational and informational purposes only**. It does not provide medical diagnosis or replace consultation with a qualified healthcare professional.
